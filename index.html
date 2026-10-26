@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محول زیرنویس کوردی سۆرانی</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background-color: #0f172a; color: #f8fafc; text-align: center; padding: 20px; direction: rtl; }
+        .card { background: #1e293b; max-width: 500px; margin: auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 12px; font-size: 14px; }
+        button { background: #2563eb; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #1d4ed8; }
+        .subtitle-box { margin-top: 20px; background: #334155; padding: 15px; border-radius: 8px; min-height: 100px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>دروستکردنی ژێرنووسی کوردی سۆرانی</h2>
+        <p>لینکی ڤیدیۆ یان یوتیوب بنووسە بۆ دروستکردنی ژێرنووس:</p>
+        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+        <br>
+        <button onclick="generateSubtitles()">دروستکردنی ژێرنووس</button>
+        <div class="subtitle-box" id="result">ژێرنووسەکە لێرە پێشاندەدرێت...</div>
+    </div>
+
+    <script>
+        async function generateSubtitles() {
+            const url = document.getElementById('videoUrl').value;
+            const resultDiv = document.getElementById('result');
+            if(!url) { alert('تکایە پێشتر لینکێک بنووسە'); return; }
+            resultDiv.innerText = 'تکایە چاوەڕێ بکە... لە حاڵەتی شیکردنەوەی دەنگ و وەرگێڕاندایە...';
+            
+            // داواکاری ناردن بۆ backend
+            setTimeout(() => {
+                resultDiv.innerText = "ئەمە دەقی ژێرنووسی ئۆتۆماتیکی کوردی سۆرانییە بۆ ڤیدیۆکە.";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
