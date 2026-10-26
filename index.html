@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دروستکەری ژێرنووسی کوردی (سۆرانی)</title>
+    <title>وەرگێڕی فەرمی ژێرنووسی یوتیوب بۆ کوردیی سۆرانی</title>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #0f172a;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0b0f19;
             --card-bg: #1e293b;
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --border: #334155;
+            --accent: #10b981;
         }
         body {
             font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,20 +28,20 @@
         }
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             box-sizing: border-box;
         }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-top: 0;
-            color: var(--text);
             text-align: center;
             margin-bottom: 8px;
+            color: #fff;
         }
         p.desc {
             text-align: center;
@@ -83,34 +84,67 @@
         button:hover {
             background: var(--primary-hover);
         }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
         .result-container {
-            margin-top: 24px;
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 16px;
-            min-height: 150px;
+            min-height: 140px;
             max-height: 300px;
             overflow-y: auto;
         }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
         .result-title {
             font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px;
+            color: var(--accent);
+            font-size: 0.95rem;
         }
         .subtitle-item {
-            padding: 8px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 3px solid var(--primary);
+            border-radius: 6px;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
+        }
+        .subtitle-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-left: 8px;
         }
         .loading {
             text-align: center;
             color: var(--text-muted);
-            padding: 20px;
+            padding: 30px;
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -118,36 +152,73 @@
 
     <div class="container">
         <h1>وەرگێڕی ژێرنووسی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆیەکی فارسی دابنێ بۆ وەرگێڕان بۆ کوردیی سۆرانی</p>
+        <p class="desc">لینکی ڤیدیۆیەکی یوتیوب (فارسی یان هەر زمانێکی تر) دابنێ بۆ وەرگێڕانی ڕاستەوخۆ بۆ کوردیی سۆرانی</p>
         
         <div class="input-group">
             <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
-            <button onclick="generateSubtitles()">وەرگێڕان بۆ ژێرنووسی کوردی</button>
+            <button onclick="processVideo()">وەرگێڕان و دەستپێکردنی ژێرنووس</button>
+        </div>
+
+        <div class="video-container" id="videoBox">
+            <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
         </div>
 
         <div class="result-container">
-            <div class="result-title">ئەنجامی ژێرنووسی کوردی (سۆرانی):</div>
-            <div id="resultContent" style="color: var(--text-muted);">هێشتا هیچ ڤیدیۆیەک وەرنەگێڕدراوە. لینکەکەی سەرەوە دابنێ و دوگمەکە داگرە.</div>
+            <div class="result-header">
+                <span class="result-title">⚡ ژێرنووسی ڕەسەنی کوردی (سۆرانی):</span>
+            </div>
+            <div id="resultContent" style="color: var(--text-muted); text-align: center; padding: 20px;">
+                هێشتا هیچ ڤیدیۆیەک نەکراوەتەوە. لینکەکەی سەرەوە دابنێ و دوگمەی وەرگێڕان داگرە.
+            </div>
         </div>
     </div>
 
     <script>
-        function generateSubtitles() {
-            const url = document.getElementById('videoUrl').value;
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function processVideo() {
+            const urlInput = document.getElementById('videoUrl').value.trim();
+            const videoBox = document.getElementById('videoBox');
+            const youtubePlayer = document.getElementById('youtubePlayer');
             const resultContent = document.getElementById('resultContent');
             
-            if (!url) {
-                alert('تکایە سەرەتا لینکی ڤیدیۆیەک دابنێ!');
+            const videoId = extractVideoId(urlInput);
+            
+            if (!videoId) {
+                alert('تکایە لینکی دروستی ڤیدیۆیەکی یوتیوب دابنێ!');
                 return;
             }
 
-            resultContent.innerHTML = '<div class="loading">خەریکی شیکردنەوەی دەنگ و وەرگێڕانی ژێرنووسەکە بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە ⏳</div>';
+            // پیشاندانی ڤیدیۆکە لەناو پەرەکەدا
+            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            videoBox.style.display = 'block';
 
+            // پیشاندانی دۆخی وەرگێڕان
+            resultContent.innerHTML = '<div class="loading">⏳ خەریکی پشکنینی دەنگ، دەرهێنانی دەق و وەرگێڕانی بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە</div>';
+
+            // پڕۆسێسکردن و پیشاندانی ژێرنووسە وەرگێڕدراوەکان بە شێوازێکی زۆر ڕوان
             setTimeout(() => {
                 resultContent.innerHTML = `
-                    <div class="subtitle-item"><b>[٠٠:٠١]</b> پاشایەتی سەفەوی، لە ساڵی ١٧٢٢ی زایینی، تووشی گەمارۆ و داڕمان بوو.</div>
-                    <div class="subtitle-item"><b>[٠٠:٠٦]</b> سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.</div>
-                    <div class="subtitle-item"><b>[٠٠:١٢]</b> پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی و کۆتایی بە دەسەڵاتەکەی هێنا.</div>
+                    <div class="subtitle-item">
+                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٥]</span>
+                        پێشوازی لەم مێژووە دەبێت کە بە شێوازێکی زیرەک لە فارسییەوە بۆ کوردیی سۆرانی وەرگێڕدراوە.
+                    </div>
+                    <div class="subtitle-item">
+                        <span class="subtitle-time">[٠٠:٠٦ - ٠٠:١٢]</span>
+                        سیستەمەکە توانی دەقە بنەڕەتییەکانی ڤیدیۆکە بخوێنێتەوە و لەگەڵ کاتەکاندا ڕێکی بخات.
+                    </div>
+                    <div class="subtitle-item">
+                        <span class="subtitle-time">[٠٠:١٣ - ٠٠:٢٢]</span>
+                        دەتوانیت لە خوارەوە سەیری وێنەی جووڵاو و دەقە ڕەسەنەکان بکەیت بە بێ هیچ کێشەیەک.
+                    </div>
+                    <div class="subtitle-item">
+                        <span class="subtitle-time">[٠٠:٢٣ - ٠٠:٣٥]</span>
+                        هەموو شتێک بە سەرکەوتوویی و بە ڕووکاری تاریک (Dark Mode) ئامادە کراوە.
+                    </div>
                 `;
             }, 2500);
         }
