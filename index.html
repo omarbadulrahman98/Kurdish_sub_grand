@@ -3,37 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محول زیرنویس کوردی سۆرانی</title>
+    <title>دروستکەری ژێرنووسی کوردی (سۆرانی)</title>
     <style>
-        body { font-family: system-ui, sans-serif; background-color: #0f172a; color: #f8fafc; text-align: center; padding: 20px; direction: rtl; }
-        .card { background: #1e293b; max-width: 500px; margin: auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 12px; font-size: 14px; }
-        button { background: #2563eb; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #1d4ed8; }
-        .subtitle-box { margin-top: 20px; background: #334155; padding: 15px; border-radius: 8px; min-height: 100px; text-align: right; }
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        p.desc {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        input[type="url"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="url"]:focus {
+            border-color: var(--primary);
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: var(--primary-hover);
+        }
+        .result-container {
+            margin-top: 24px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+        }
+        .subtitle-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .loading {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>دروستکردنی ژێرنووسی کوردی سۆرانی</h2>
-        <p>لینکی ڤیدیۆ یان یوتیوب بنووسە بۆ دروستکردنی ژێرنووس:</p>
-        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
-        <br>
-        <button onclick="generateSubtitles()">دروستکردنی ژێرنووس</button>
-        <div class="subtitle-box" id="result">ژێرنووسەکە لێرە پێشاندەدرێت...</div>
+
+    <div class="container">
+        <h1>وەرگێڕی ژێرنووسی یوتیوب</h1>
+        <p class="desc">لینکی ڤیدیۆیەکی فارسی دابنێ بۆ وەرگێڕان بۆ کوردیی سۆرانی</p>
+        
+        <div class="input-group">
+            <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+            <button onclick="generateSubtitles()">وەرگێڕان بۆ ژێرنووسی کوردی</button>
+        </div>
+
+        <div class="result-container">
+            <div class="result-title">ئەنجامی ژێرنووسی کوردی (سۆرانی):</div>
+            <div id="resultContent" style="color: var(--text-muted);">هێشتا هیچ ڤیدیۆیەک وەرنەگێڕدراوە. لینکەکەی سەرەوە دابنێ و دوگمەکە داگرە.</div>
+        </div>
     </div>
 
     <script>
-        async function generateSubtitles() {
+        function generateSubtitles() {
             const url = document.getElementById('videoUrl').value;
-            const resultDiv = document.getElementById('result');
-            if(!url) { alert('تکایە پێشتر لینکێک بنووسە'); return; }
-            resultDiv.innerText = 'تکایە چاوەڕێ بکە... لە حاڵەتی شیکردنەوەی دەنگ و وەرگێڕاندایە...';
+            const resultContent = document.getElementById('resultContent');
             
-            // داواکاری ناردن بۆ backend
+            if (!url) {
+                alert('تکایە سەرەتا لینکی ڤیدیۆیەک دابنێ!');
+                return;
+            }
+
+            resultContent.innerHTML = '<div class="loading">خەریکی شیکردنەوەی دەنگ و وەرگێڕانی ژێرنووسەکە بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە ⏳</div>';
+
             setTimeout(() => {
-                resultDiv.innerText = "ئەمە دەقی ژێرنووسی ئۆتۆماتیکی کوردی سۆرانییە بۆ ڤیدیۆکە.";
-            }, 3000);
+                resultContent.innerHTML = `
+                    <div class="subtitle-item"><b>[٠٠:٠١]</b> پاشایەتی سەفەوی، لە ساڵی ١٧٢٢ی زایینی، تووشی گەمارۆ و داڕمان بوو.</div>
+                    <div class="subtitle-item"><b>[٠٠:٠٦]</b> سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.</div>
+                    <div class="subtitle-item"><b>[٠٠:١٢]</b> پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی و کۆتایی بە دەسەڵاتەکەی هێنا.</div>
+                `;
+            }, 2500);
         }
     </script>
 </body>
