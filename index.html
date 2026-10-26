@@ -85,10 +85,6 @@
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
-            transition: background 0.2s;
-        }
-        .paste-btn:active {
-            background: #475569;
         }
         button.action-btn {
             width: 100%;
@@ -100,7 +96,6 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
         button.action-btn:hover {
             background: #4f46e5;
@@ -219,7 +214,8 @@
                 return;
             }
 
-            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?cc_load_policy=0&iv_load_policy=3`;
+            // قەدەغەکردنی ژێرنووسی خۆکارانەی یوتیوب لەناو ئایفڕەیمەکەدا
+            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=0&iv_load_policy=3`;
             videoBox.style.display = 'block';
 
             resultContent.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">⏳ خەریکی وەرگێڕانی دەقەکە بۆ کوردیی سۆرانی...</div>';
