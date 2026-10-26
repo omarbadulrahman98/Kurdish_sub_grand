@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وەرگێڕی فەرمی ژێرنووسی یوتیوب بۆ کوردیی سۆرانی</title>
+    <title>وەرگێڕی ژێرنووسی کوردی یوتیوب</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -54,9 +54,13 @@
             gap: 12px;
             margin-bottom: 20px;
         }
-        /* دڵنیابوون لەوەی خانەی لینک LTR یە بۆ ئەوەی لینک تێک نەچێت و پەیست بکرێت */
-        input[type="url"] {
+        .input-wrapper {
+            display: flex;
+            gap: 8px;
             width: 100%;
+        }
+        input[type="text"] {
+            flex: 1;
             padding: 14px 16px;
             background: #0f172a;
             border: 1px solid var(--border);
@@ -68,8 +72,23 @@
             direction: ltr;
             text-align: left;
         }
-        input[type="url"]:focus {
+        input[type="text"]:focus {
             border-color: var(--primary);
+        }
+        .paste-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .paste-btn:active {
+            background: #475569;
         }
         button.action-btn {
             width: 100%;
@@ -145,7 +164,10 @@
         <p class="desc">لینکی ڤیدیۆی یوتیوب دابنێ بۆ بینین بە ژێرنووسی کوردی</p>
         
         <div class="input-group">
-            <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+            <div class="input-wrapper">
+                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+                <button class="paste-btn" onclick="pasteLink()">📋 لەکۆپیهێنان</button>
+            </div>
             <button class="action-btn" onclick="processVideo()">وەرگێڕان و پیشاندانی ژێرنووس</button>
         </div>
 
@@ -162,6 +184,22 @@
     </div>
 
     <script>
+        async function pasteLink() {
+            const inputField = document.getElementById('videoUrl');
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    inputField.value = text;
+                } else {
+                    const text = prompt('لینکی یوتیوب لێرەدا پەیست (Paste) بکە:');
+                    if (text) inputField.value = text;
+                }
+            } catch (err) {
+                const text = prompt('لینکی یوتیوب لێرەدا پەیست (Paste) بکە:');
+                if (text) inputField.value = text;
+            }
+        }
+
         function extractVideoId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -197,7 +235,7 @@
                         سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٦ - ٠٠:٢٥]</span>
+                        <span class="subtitle-time">[٠٠:١٦ - ٠٠:٢٥]</span>
                         پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی.
                     </div>
                 `;
