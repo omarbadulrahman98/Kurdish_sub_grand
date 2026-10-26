@@ -1,270 +1,729 @@
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وەرگێڕی فەرمی ژێرنووسی کوردی یوتیوب</title>
-    <style>
-        :root {
-            --primary: #6366f1;
-            --bg: #0b0f19;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --accent: #10b981;
-        }
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 700px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
-        }
-        h1 {
-            font-size: 1.4rem;
-            margin-top: 0;
-            text-align: center;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-        p.desc {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .input-wrapper {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-        }
-        input[type="text"] {
-            flex: 1;
-            padding: 14px 16px;
-            background: #0f172a;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1rem;
-            box-sizing: border-box;
-            outline: none;
-            direction: ltr;
-            text-align: left;
-        }
-        input[type="text"]:focus {
-            border-color: var(--primary);
-        }
-        .paste-btn {
-            background: #334155;
-            color: white;
-            border: none;
-            padding: 0 16px;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        button.action-btn {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        button.action-btn:hover {
-            background: #4f46e5;
-        }
-        /* چوارگۆچەی ڤیدیۆ لەگەڵ سیستەمی داپۆشینی ژێرنووس */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            display: none;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        /* ماسکی ڕەشی زیرەک بۆ داپۆشینی تەواوی دەقی فارسی لە خوارەوە */
-        .video-mask {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to top, #000 70%, transparent);
-            pointer-events: none;
-            z-index: 5;
-            display: none;
-        }
-        .result-container {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            min-height: 140px;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-        .result-header {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .subtitle-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            border-right: 4px solid var(--primary);
-            border-radius: 8px;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .subtitle-time {
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-left: 8px;
-        }
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.95rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12100e">
+<title>ژێرنووسی کوردی بۆ ڤیدیۆی یوتیوب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12100e;
+    --surface: #1c1916;
+    --surface-2: #26221e;
+    --line: #38322c;
+    --text: #f1ebe2;
+    --muted: #a39b8f;
+    --accent: #e8b04a;
+    --accent-ink: #1a1306;
+    --danger: #ef7b6b;
+    --radius: 12px;
+    --font: "Vazirmatn", "Noto Naskh Arabic", Tahoma, "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.7;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .app { max-width: 920px; margin: 0 auto; padding: 16px 14px 48px; }
+  h1 { font-size: 1.25rem; margin: 6px 0 14px; font-weight: 700; }
+
+  /* URL form */
+  .url-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .url-row input[type="text"] {
+    flex: 1 1 240px; min-width: 0;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 11px 14px; direction: ltr; text-align: left;
+  }
+  .url-row input::placeholder { color: var(--muted); direction: rtl; }
+  .btn {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 10px 16px; cursor: pointer; white-space: nowrap; min-height: 44px;
+  }
+  .btn:hover { border-color: var(--muted); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+  .btn.small { min-height: 36px; padding: 4px 12px; }
+  .msg { min-height: 1.6em; margin: 8px 2px 0; font-size: .9rem; color: var(--muted); }
+  .msg.error { color: var(--danger); }
+
+  /* Stage */
+  .stage { margin-top: 10px; }
+  .video-wrap {
+    position: relative; width: 100%; aspect-ratio: 16 / 9;
+    background: #000; border-radius: var(--radius); overflow: hidden;
+    container-type: inline-size;
+    --mask-h: 18%; --mask-b: 1%; --fs: 3.4;
+  }
+  .video-wrap.pseudo-fs { position: fixed; inset: 0; z-index: 1000; border-radius: 0; aspect-ratio: auto; height: 100%; }
+  .video-wrap iframe, .video-wrap #player { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .placeholder {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    color: var(--muted); padding: 24px; font-size: .95rem;
+  }
+
+  /* Mask that hides burned-in Persian subtitles */
+  .mask {
+    position: absolute; left: 0; right: 0; bottom: var(--mask-b); height: var(--mask-h);
+    pointer-events: none; display: none; z-index: 2;
+  }
+  .mask.on { display: block; }
+  .mask.solid { background: var(--mask-color, #000); opacity: var(--mask-opacity, 1); }
+  .mask.blur {
+    background: rgba(0, 0, 0, .45);
+    -webkit-backdrop-filter: blur(22px) brightness(.55);
+    backdrop-filter: blur(22px) brightness(.55);
+  }
+
+  /* Kurdish subtitle drawn over the mask */
+  .overlay-sub {
+    position: absolute; left: 0; right: 0; bottom: var(--mask-b); height: var(--mask-h);
+    display: none; align-items: center; justify-content: center; text-align: center;
+    padding: 0 4%; pointer-events: none; z-index: 3;
+  }
+  .overlay-sub.mask-off { height: auto; bottom: 4%; }
+  .overlay-sub.on { display: flex; }
+  .overlay-sub span {
+    font-size: calc(var(--fs) * 1cqw); line-height: 1.55; font-weight: 500; color: #fff;
+    text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.8); white-space: pre-line;
+  }
+  .overlay-sub.mask-off span { background: rgba(0,0,0,.6); padding: 2px 10px; border-radius: 6px; }
+
+  /* Controls */
+  .controls {
+    display: flex; align-items: center; gap: 10px; margin-top: 8px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 6px 10px;
+  }
+  .controls.in-fs { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 5; margin: 0; background: rgba(18,16,14,.85); }
+  .icon-btn {
+    background: none; border: 0; cursor: pointer; width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; flex: none;
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+  .icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+  .time { direction: ltr; font-variant-numeric: tabular-nums; font-size: .82rem; color: var(--muted); flex: none; }
+  #seek { flex: 1; min-width: 0; direction: ltr; accent-color: var(--accent); height: 28px; }
+  #speed {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px; direction: ltr; flex: none;
+  }
+
+  /* Current subtitle below video */
+  .current {
+    margin-top: 10px; min-height: 5.2em; display: grid; place-items: center; text-align: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px;
+    font-size: 1.2rem; line-height: 1.8; white-space: pre-line;
+  }
+  .current.empty { color: var(--muted); font-size: .95rem; }
+
+  /* Panels */
+  details.panel {
+    margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  }
+  details.panel > summary {
+    cursor: pointer; padding: 12px 16px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  details.panel > summary::-webkit-details-marker { display: none; }
+  details.panel > summary::after { content: "+"; color: var(--muted); font-size: 1.3rem; line-height: 1; }
+  details.panel[open] > summary::after { content: "−"; }
+  .panel-body { padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+
+  .field { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; margin-top: 12px; }
+  .field label { font-size: .92rem; }
+  .field output { direction: ltr; color: var(--muted); font-size: .85rem; min-width: 3.5em; text-align: left; }
+  .field input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); direction: ltr; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .row select, .row input[type="color"] { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; min-height: 36px; }
+  .row input[type="color"] { padding: 2px; width: 48px; }
+  .switch { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .switch input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .hint { color: var(--muted); font-size: .82rem; margin: 10px 0 0; }
+
+  textarea#srtText {
+    width: 100%; min-height: 130px; margin-top: 10px; resize: vertical; direction: ltr; text-align: left;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85rem;
+  }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* Cue list */
+  .cue-list { max-height: 340px; overflow-y: auto; margin-top: 10px; border-radius: 10px; }
+  .cue {
+    display: flex; gap: 12px; align-items: baseline; width: 100%; text-align: right; cursor: pointer;
+    background: none; border: 0; border-bottom: 1px solid var(--line); padding: 9px 8px;
+  }
+  .cue:hover { background: var(--surface-2); }
+  .cue.active { background: rgba(232,176,74,.14); box-shadow: inset -3px 0 0 var(--accent); }
+  .cue .t { direction: ltr; color: var(--accent); font-size: .78rem; font-variant-numeric: tabular-nums; flex: none; min-width: 3.4em; text-align: left; }
+  .cue .x { white-space: pre-line; flex: 1; }
+  .empty-list { color: var(--muted); padding: 14px 4px; font-size: .92rem; }
+
+  @media (min-width: 720px) {
+    .app { padding-top: 28px; }
+    h1 { font-size: 1.5rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
 </head>
 <body>
+<main class="app">
+  <h1>ژێرنووسی کوردی بۆ ڤیدیۆی یوتیوب</h1>
 
-    <div class="container">
-        <h1>وەرگێڕی فەرمی ژێرنووسی کوردی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ لابردنی دەقی فارسی و پیشاندانی ژێرنووسی کوردی</p>
-        
-        <div class="input-group">
-            <div class="input-wrapper">
-                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
-                <button class="paste-btn" onclick="pasteLink()">📋 لەکۆپیهێنان</button>
-            </div>
-            <button class="action-btn" onclick="translateAndPlay()">دەستپێکردنی وەرگێڕان و لێدان</button>
-        </div>
+  <form class="url-row" id="urlForm" autocomplete="off">
+    <input type="text" id="urlInput" inputmode="url" placeholder="لینکی یوتیوب لێرە دابنێ" aria-label="لینکی یوتیوب" spellcheck="false">
+    <button type="button" class="btn" id="pasteBtn">لکاندن</button>
+    <button type="submit" class="btn primary">پیشاندان</button>
+  </form>
+  <div class="msg" id="msg" role="status"></div>
 
-        <div class="video-container" id="videoBox">
-            <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
-            <div class="video-mask" id="videoMask"></div>
-        </div>
-
-        <div class="result-container">
-            <div class="result-header">
-                <span>⚡ ژێرنووسی فەرمی کوردیی سۆرانی:</span>
-                <span id="statusBadge" style="font-size: 0.8rem; color: var(--text-muted);">ئامادە</span>
-            </div>
-            <div id="resultContent" style="color: var(--text-muted); text-align: center; padding: 20px;">
-                لینکی ڤیدیۆکە دابنێ بۆ بینینی بە ژێرنووسی پاکی کوردی.
-            </div>
-        </div>
+  <section class="stage">
+    <div class="video-wrap" id="videoWrap">
+      <div class="placeholder" id="placeholder">لینکی ڤیدیۆکە دابنێ و «پیشاندان» دابگرە</div>
+      <div id="player"></div>
+      <div class="mask solid on" id="mask"></div>
+      <div class="overlay-sub on" id="overlaySub"><span id="overlayText"></span></div>
     </div>
 
-    <script>
-        async function pasteLink() {
-            const inputField = document.getElementById('videoUrl');
-            try {
-                if (navigator.clipboard && navigator.clipboard.readText) {
-                    const text = await navigator.clipboard.readText();
-                    inputField.value = text;
-                } else {
-                    const text = prompt('لینکی یوتیوب لێرەدا پەیست (Paste) بکە:');
-                    if (text) inputField.value = text;
-                }
-            } catch (err) {
-                const text = prompt('لینکی یوتیوب لێرەدا پەیست (Paste) بکە:');
-                if (text) inputField.value = text;
-            }
+    <div class="controls" id="controls">
+      <button class="icon-btn" id="playBtn" aria-label="لێدان / ڕاگرتن" type="button"></button>
+      <span class="time" id="timeNow">0:00</span>
+      <input type="range" id="seek" min="0" max="1000" value="0" aria-label="شوێنی ڤیدیۆ">
+      <span class="time" id="timeDur">0:00</span>
+      <select id="speed" aria-label="خێرایی">
+        <option value="0.5">0.5×</option>
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <button class="icon-btn" id="fsBtn" aria-label="شاشەی پڕ" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h5v2H7v3H5V5zm9 0h5v5h-2V7h-3V5zM5 14h2v3h3v2H5v-5zm12 0h2v5h-5v-2h3v-3z"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <div class="current empty" id="current">ژێرنووسی کوردی لێرە دەردەکەوێت</div>
+
+  <details class="panel" open>
+    <summary>هێنانی ژێرنووس</summary>
+    <div class="panel-body">
+      <p class="hint">فایلی SRT یان VTT هەڵبژێرە (بۆ نموونە ئەوەی لە بەرنامەی ژێرنووسەکەتەوە دروستت کردووە)، یان دەقەکە لێرە بلکێنە. ژێرنووسەکان بۆ هەر ڤیدیۆیەک لە وێبگەڕەکەتدا دەپارێزرێن.</p>
+      <div class="btn-row">
+        <label class="btn" for="fileInput" style="display:inline-grid;place-items:center;">هەڵبژاردنی فایل</label>
+        <input type="file" id="fileInput" accept=".srt,.vtt,.txt,text/plain,text/vtt" hidden>
+        <button class="btn" id="demoBtn" type="button">نموونە</button>
+        <button class="btn" id="clearSubsBtn" type="button">سڕینەوەی ژێرنووس</button>
+      </div>
+      <textarea id="srtText" placeholder="1&#10;00:00:01,000 --> 00:00:04,000&#10;دەقی کوردی لێرە" aria-label="دەقی SRT"></textarea>
+      <div class="btn-row"><button class="btn primary" id="applyTextBtn" type="button">جێبەجێکردن</button></div>
+    </div>
+  </details>
+
+  <details class="panel" open>
+    <summary>ماسکی ژێرنووسی فارسی</summary>
+    <div class="panel-body">
+      <div class="row">
+        <label class="switch"><input type="checkbox" id="maskOn" checked> ماسک چالاک بێت</label>
+        <select id="maskStyle" aria-label="جۆری ماسک">
+          <option value="solid">ڕەنگی تەواو</option>
+          <option value="blur">تەمومژاوی</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="maskH">بەرزی ماسک</label><output id="maskHOut"></output>
+        <input type="range" id="maskH" min="0" max="40" step="0.5">
+      </div>
+      <div class="field">
+        <label for="maskB">دووری لە خوارەوە</label><output id="maskBOut"></output>
+        <input type="range" id="maskB" min="0" max="30" step="0.5">
+      </div>
+      <div class="row">
+        <label for="maskColor">ڕەنگی ماسک</label>
+        <input type="color" id="maskColor" value="#000000">
+      </div>
+      <p class="hint">ژێرنووسی فارسی لە ناو پیکسێلەکانی ڤیدیۆکەدایە و ناسڕدرێتەوە؛ ماسکەکە بەرزی و شوێنەکەی بگۆڕە تا تەواو دایبپۆشێت. ڕەنگی تەواو پشتڕاستترین ڕێگایە.</p>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary>ڕێکخستنی ژێرنووس</summary>
+    <div class="panel-body">
+      <div class="row">
+        <label class="switch"><input type="checkbox" id="overlayOn" checked> ژێرنووس لەسەر ڤیدیۆ پیشان بدە</label>
+      </div>
+      <div class="field">
+        <label for="fontSize">قەبارەی نووسین</label><output id="fontSizeOut"></output>
+        <input type="range" id="fontSize" min="2" max="6" step="0.1">
+      </div>
+      <div class="row">
+        <span>هاوکاتکردن (چرکە)</span>
+        <span class="btn-row" style="margin:0;align-items:center;">
+          <button class="btn small" id="offMinus" type="button">−0.5</button>
+          <output id="offOut" style="direction:ltr;min-width:3.5em;text-align:center;">0.0</output>
+          <button class="btn small" id="offPlus" type="button">+0.5</button>
+          <button class="btn small" id="offReset" type="button">٠</button>
+        </span>
+      </div>
+      <p class="hint">ئەگەر ژێرنووس زوو دەردەکەوێت، بەهای + بەکاربهێنە؛ ئەگەر درەنگ دەردەکەوێت، بەهای −.</p>
+    </div>
+  </details>
+
+  <details class="panel" open>
+    <summary>لیستی ژێرنووس</summary>
+    <div class="panel-body">
+      <div class="cue-list" id="cueList"></div>
+    </div>
+  </details>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ---------- Helpers ---------- */
+  const $ = (id) => document.getElementById(id);
+  const els = {
+    form: $('urlForm'), url: $('urlInput'), paste: $('pasteBtn'), msg: $('msg'),
+    wrap: $('videoWrap'), placeholder: $('placeholder'), mask: $('mask'),
+    overlay: $('overlaySub'), overlayText: $('overlayText'), current: $('current'),
+    controls: $('controls'), playBtn: $('playBtn'), seek: $('seek'),
+    timeNow: $('timeNow'), timeDur: $('timeDur'), speed: $('speed'), fsBtn: $('fsBtn'),
+    file: $('fileInput'), srtText: $('srtText'), applyText: $('applyTextBtn'),
+    demo: $('demoBtn'), clearSubs: $('clearSubsBtn'), cueList: $('cueList'),
+    maskOn: $('maskOn'), maskStyle: $('maskStyle'), maskH: $('maskH'), maskHOut: $('maskHOut'),
+    maskB: $('maskB'), maskBOut: $('maskBOut'), maskColor: $('maskColor'),
+    overlayOn: $('overlayOn'), fontSize: $('fontSize'), fontSizeOut: $('fontSizeOut'),
+    offMinus: $('offMinus'), offPlus: $('offPlus'), offReset: $('offReset'), offOut: $('offOut')
+  };
+
+  const ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  const ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
+  els.playBtn.innerHTML = ICON_PLAY;
+
+  function say(text, isError) {
+    els.msg.textContent = text || '';
+    els.msg.classList.toggle('error', !!isError);
+  }
+  function fmt(sec) {
+    sec = Math.max(0, Math.floor(sec || 0));
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const mm = h ? String(m).padStart(2, '0') : String(m);
+    return (h ? h + ':' : '') + mm + ':' + String(s).padStart(2, '0');
+  }
+  function store(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  function load(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function drop(key) { try { localStorage.removeItem(key); } catch (e) {} }
+
+  /* ---------- YouTube URL parsing ---------- */
+  function extractVideoId(input) {
+    const raw = (input || '').trim();
+    if (!raw) return null;
+    if (/^[\w-]{11}$/.test(raw)) return raw;
+    let u;
+    try { u = new URL(/^https?:\/\//i.test(raw) ? raw : 'https://' + raw); } catch (e) { return null; }
+    const host = u.hostname.replace(/^(www\.|m\.|music\.)/, '');
+    let id = null;
+    if (host === 'youtu.be') {
+      id = u.pathname.split('/')[1];
+    } else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+      if (u.pathname === '/watch') id = u.searchParams.get('v');
+      else {
+        const m = u.pathname.match(/^\/(?:embed|shorts|live|v)\/([\w-]{11})/);
+        if (m) id = m[1];
+      }
+    }
+    return id && /^[\w-]{11}$/.test(id) ? id : null;
+  }
+
+  /* ---------- YouTube IFrame API ---------- */
+  let player = null, apiReady = false, pendingId = null, currentId = null, playerReady = false;
+
+  function loadApi() {
+    if (window.YT && window.YT.Player) { apiReady = true; return; }
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.async = true;
+    tag.onerror = () => say('بارکردنی لێدەری یوتیوب سەرکەوتوو نەبوو. ئینتەرنێتەکەت بپشکنە.', true);
+    document.head.appendChild(tag);
+  }
+  window.onYouTubeIframeAPIReady = () => {
+    apiReady = true;
+    if (pendingId) { createPlayer(pendingId); pendingId = null; }
+  };
+
+  function createPlayer(id) {
+    els.placeholder.style.display = 'none';
+    if (player && playerReady) {
+      player.loadVideoById(id);
+      return;
+    }
+    if (player) return; // still initialising; the ready handler will pick up currentId
+    player = new YT.Player('player', {
+      host: 'https://www.youtube-nocookie.com',
+      videoId: id,
+      width: '100%',
+      height: '100%',
+      playerVars: {
+        playsinline: 1,      // inline on iOS
+        controls: 0,         // custom controls keep the mask clear of YouTube UI
+        rel: 0,              // related videos from the same channel only
+        modestbranding: 1,
+        iv_load_policy: 3,   // hide annotations
+        cc_load_policy: 0,   // no YouTube captions
+        disablekb: 1,
+        fs: 0,               // custom fullscreen keeps mask and subtitles visible
+        enablejsapi: 1,
+        origin: location.origin
+      },
+      events: {
+        onReady: () => {
+          playerReady = true;
+          if (currentId) player.cueVideoById(currentId);
+          startLoop();
+        },
+        onStateChange: (e) => {
+          els.playBtn.innerHTML = e.data === YT.PlayerState.PLAYING ? ICON_PAUSE : ICON_PLAY;
+        },
+        onError: (e) => {
+          const map = {
+            2: 'شوناسی ڤیدیۆکە دروست نییە.',
+            5: 'ئەم ڤیدیۆیە لەم لێدەرەدا ناکرێت.',
+            100: 'ڤیدیۆکە نەدۆزرایەوە یان تایبەتە.',
+            101: 'خاوەنی ڤیدیۆکە ڕێگەی نەداوە لە شوێنی تردا بلاو بکرێتەوە.',
+            150: 'خاوەنی ڤیدیۆکە ڕێگەی نەداوە لە شوێنی تردا بلاو بکرێتەوە.'
+          };
+          say(map[e.data] || 'هەڵەیەک لە لێدانی ڤیدیۆکە ڕوویدا.', true);
         }
+      }
+    });
+  }
 
-        function extractVideoId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
+  function showVideo(id) {
+    currentId = id;
+    els.seek.value = 0;
+    els.timeNow.textContent = '0:00';
+    els.timeDur.textContent = '0:00';
+    lastIdx = -2;
+    restoreSubsFor(id);
+    if (!apiReady) { pendingId = id; loadApi(); }
+    else createPlayer(id);
+  }
 
-        async function translateAndPlay() {
-            const urlInput = document.getElementById('videoUrl').value.trim();
-            const videoBox = document.getElementById('videoBox');
-            const youtubePlayer = document.getElementById('youtubePlayer');
-            const videoMask = document.getElementById('videoMask');
-            const resultContent = document.getElementById('resultContent');
-            const statusBadge = document.getElementById('statusBadge');
-            
-            const videoId = extractVideoId(urlInput);
-            
-            if (!videoId) {
-                alert('تکایە لینکی دروستی ڤیدیۆیەکی یوتیوب دابنێ!');
-                return;
-            }
+  /* ---------- Subtitles: parsing ---------- */
+  let cues = [];
+  let offset = 0;
+  let lastIdx = -2;
 
-            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=0&iv_load_policy=3`;
-            videoBox.style.display = 'block';
-            videoMask.style.display = 'block';
+  function parseTime(str) {
+    const m = str.trim().match(/^(?:(\d+):)?(\d{1,2}):(\d{2})(?:[.,](\d{1,3}))?$/);
+    if (!m) return null;
+    const ms = m[4] ? parseInt(m[4].padEnd(3, '0'), 10) : 0;
+    return (parseInt(m[1] || 0, 10) * 3600) + (parseInt(m[2], 10) * 60) + parseInt(m[3], 10) + ms / 1000;
+  }
+  function parseSubs(text) {
+    const out = [];
+    const clean = String(text).replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').trim();
+    const blocks = clean.split(/\n{2,}/);
+    for (const block of blocks) {
+      const lines = block.split('\n');
+      const ti = lines.findIndex((l) => l.includes('-->'));
+      if (ti === -1) continue;
+      const parts = lines[ti].split('-->');
+      const start = parseTime(parts[0].trim().split(/\s+/)[0]);
+      const end = parseTime(parts[1].trim().split(/\s+/)[0]);
+      if (start === null || end === null) continue;
+      const txt = lines.slice(ti + 1).join('\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\{\\[^}]*\}/g, '')
+        .trim();
+      if (txt) out.push({ start, end, text: txt });
+    }
+    out.sort((a, b) => a.start - b.start);
+    return out;
+  }
+  function cuesToSrt(list) {
+    const ts = (s) => {
+      const ms = Math.round(s * 1000);
+      const h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60, r = ms % 1000;
+      return [h, m, sec].map((n) => String(n).padStart(2, '0')).join(':') + ',' + String(r).padStart(3, '0');
+    };
+    return list.map((c, i) => (i + 1) + '\n' + ts(c.start) + ' --> ' + ts(c.end) + '\n' + c.text).join('\n\n');
+  }
 
-            statusBadge.innerText = 'خەریکی پشکنین...';
-            resultContent.innerHTML = '<div class="loading">⏳ داپۆشینی ژێرنووسی فارسی و ئامادەکردنی ژێرنووسی کوردیی سۆرانی...</div>';
+  /* ---------- Subtitles: state, storage, list ---------- */
+  function setCues(list, persist) {
+    cues = list;
+    lastIdx = -2;
+    renderList();
+    if (persist && currentId) {
+      if (cues.length) store('ckb-subs:' + currentId, cuesToSrt(cues));
+      else drop('ckb-subs:' + currentId);
+    }
+    updateSubtitle(true);
+  }
+  function restoreSubsFor(id) {
+    const saved = load('ckb-subs:' + id);
+    const off = parseFloat(load('ckb-offset:' + id));
+    setOffset(isFinite(off) ? off : 0, false);
+    setCues(saved ? parseSubs(saved) : [], false);
+  }
+  function renderList() {
+    els.cueList.textContent = '';
+    if (!cues.length) {
+      const p = document.createElement('div');
+      p.className = 'empty-list';
+      p.textContent = 'هێشتا ژێرنووس نییە. فایلێکی SRT یان VTT بهێنە، یان «نموونە» دابگرە.';
+      els.cueList.appendChild(p);
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    cues.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cue';
+      b.dataset.i = i;
+      const t = document.createElement('span'); t.className = 't'; t.textContent = fmt(c.start);
+      const x = document.createElement('span'); x.className = 'x'; x.textContent = c.text;
+      b.append(t, x);
+      frag.appendChild(b);
+    });
+    els.cueList.appendChild(frag);
+  }
+  els.cueList.addEventListener('click', (e) => {
+    const b = e.target.closest('.cue');
+    if (!b || !player || !playerReady) return;
+    const c = cues[+b.dataset.i];
+    if (c) { player.seekTo(Math.max(0, c.start + offset), true); player.playVideo(); }
+  });
 
-            setTimeout(() => {
-                statusBadge.innerText = 'سەرکەوتوو بوو';
-                resultContent.innerHTML = `
-                    <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٨]</span>
-                        ماسکی سینەمایی خوارەوەی ڤیدیۆکە کارا بوو و دەقی فارسی بە تەواوی داپۆشرا و نەما.
-                    </div>
-                    <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:٢٥]</span>
-                        ئێستا دەتوانیت بە ئارامی ڤیدیۆکە ببینیت و ژێرنووسە پاکە کوردییەکە لە خوارەوە بخوێنیتەوە.
-                    </div>
-                `;
-            }, 1500);
-        }
-    </script>
+  /* ---------- Subtitles: sync ---------- */
+  function findCue(t) {
+    let lo = 0, hi = cues.length - 1, idx = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (cues[mid].start <= t) { idx = mid; lo = mid + 1; } else hi = mid - 1;
+    }
+    // overlapping cues are rare; step back a couple to catch a longer earlier one
+    for (let k = idx; k >= 0 && k > idx - 3; k--) {
+      if (t >= cues[k].start && t < cues[k].end) return k;
+    }
+    return -1;
+  }
+  function updateSubtitle(force) {
+    let t = 0;
+    if (player && playerReady && typeof player.getCurrentTime === 'function') t = player.getCurrentTime() || 0;
+    const idx = cues.length ? findCue(t - offset) : -1;
+    if (!force && idx === lastIdx) return;
+    lastIdx = idx;
+
+    const text = idx >= 0 ? cues[idx].text : '';
+    els.overlayText.textContent = text;
+    if (text) { els.current.textContent = text; els.current.classList.remove('empty'); }
+    else if (!cues.length) { els.current.textContent = 'ژێرنووسی کوردی لێرە دەردەکەوێت'; els.current.classList.add('empty'); }
+    else { els.current.textContent = ''; els.current.classList.remove('empty'); }
+
+    const prev = els.cueList.querySelector('.cue.active');
+    if (prev) prev.classList.remove('active');
+    if (idx >= 0) {
+      const node = els.cueList.querySelector('.cue[data-i="' + idx + '"]');
+      if (node) {
+        node.classList.add('active');
+        const top = node.offsetTop - els.cueList.clientHeight / 2 + node.clientHeight / 2;
+        els.cueList.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
+  }
+
+  /* ---------- Playback loop and custom controls ---------- */
+  let loopTimer = null, seeking = false;
+  function startLoop() {
+    if (loopTimer) return;
+    loopTimer = setInterval(() => {
+      if (!player || !playerReady || typeof player.getCurrentTime !== 'function') return;
+      updateSubtitle(false);
+      const cur = player.getCurrentTime() || 0;
+      const dur = player.getDuration() || 0;
+      els.timeNow.textContent = fmt(cur);
+      els.timeDur.textContent = fmt(dur);
+      if (!seeking && dur) els.seek.value = Math.round((cur / dur) * 1000);
+    }, 100);
+  }
+  els.playBtn.addEventListener('click', () => {
+    if (!player || !playerReady) return;
+    const s = player.getPlayerState();
+    if (s === YT.PlayerState.PLAYING) player.pauseVideo(); else player.playVideo();
+  });
+  els.seek.addEventListener('input', () => { seeking = true; });
+  els.seek.addEventListener('change', () => {
+    seeking = false;
+    if (!player || !playerReady) return;
+    const dur = player.getDuration() || 0;
+    player.seekTo((els.seek.value / 1000) * dur, true);
+  });
+  els.speed.addEventListener('change', () => {
+    if (player && playerReady) player.setPlaybackRate(parseFloat(els.speed.value));
+  });
+
+  /* Fullscreen on the wrapper so the mask and subtitles stay on top of the video */
+  function isFs() {
+    return document.fullscreenElement === els.wrap || document.webkitFullscreenElement === els.wrap || els.wrap.classList.contains('pseudo-fs');
+  }
+  function moveControls() {
+    if (isFs()) { els.wrap.appendChild(els.controls); els.controls.classList.add('in-fs'); }
+    else { els.wrap.after(els.controls); els.controls.classList.remove('in-fs'); }
+  }
+  els.fsBtn.addEventListener('click', () => {
+    if (isFs()) {
+      if (els.wrap.classList.contains('pseudo-fs')) els.wrap.classList.remove('pseudo-fs');
+      else (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      moveControls();
+      return;
+    }
+    const req = els.wrap.requestFullscreen || els.wrap.webkitRequestFullscreen;
+    if (req) {
+      Promise.resolve(req.call(els.wrap)).catch(() => { els.wrap.classList.add('pseudo-fs'); moveControls(); });
+    } else {
+      els.wrap.classList.add('pseudo-fs'); // iPhone Safari fallback
+      moveControls();
+    }
+  });
+  document.addEventListener('fullscreenchange', moveControls);
+  document.addEventListener('webkitfullscreenchange', moveControls);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && els.wrap.classList.contains('pseudo-fs')) { els.wrap.classList.remove('pseudo-fs'); moveControls(); }
+  });
+
+  /* ---------- Settings: mask, subtitle style, offset ---------- */
+  const defaults = { maskOn: true, maskStyle: 'solid', maskH: 18, maskB: 1, maskColor: '#000000', overlayOn: true, fontSize: 3.4 };
+  let settings = Object.assign({}, defaults);
+  try { Object.assign(settings, JSON.parse(load('ckb-settings') || '{}')); } catch (e) {}
+
+  function applySettings() {
+    els.wrap.style.setProperty('--mask-h', settings.maskH + '%');
+    els.wrap.style.setProperty('--mask-b', settings.maskB + '%');
+    els.wrap.style.setProperty('--fs', settings.fontSize);
+    els.mask.style.setProperty('--mask-color', settings.maskColor);
+    els.mask.classList.toggle('on', settings.maskOn && settings.maskH > 0);
+    els.mask.classList.toggle('solid', settings.maskStyle === 'solid');
+    els.mask.classList.toggle('blur', settings.maskStyle === 'blur');
+    els.overlay.classList.toggle('on', settings.overlayOn);
+    els.overlay.classList.toggle('mask-off', !settings.maskOn);
+
+    els.maskOn.checked = settings.maskOn;
+    els.maskStyle.value = settings.maskStyle;
+    els.maskH.value = settings.maskH; els.maskHOut.textContent = settings.maskH + '%';
+    els.maskB.value = settings.maskB; els.maskBOut.textContent = settings.maskB + '%';
+    els.maskColor.value = settings.maskColor;
+    els.overlayOn.checked = settings.overlayOn;
+    els.fontSize.value = settings.fontSize; els.fontSizeOut.textContent = Number(settings.fontSize).toFixed(1);
+    store('ckb-settings', JSON.stringify(settings));
+  }
+  els.maskOn.addEventListener('change', () => { settings.maskOn = els.maskOn.checked; applySettings(); });
+  els.maskStyle.addEventListener('change', () => { settings.maskStyle = els.maskStyle.value; applySettings(); });
+  els.maskH.addEventListener('input', () => { settings.maskH = parseFloat(els.maskH.value); applySettings(); });
+  els.maskB.addEventListener('input', () => { settings.maskB = parseFloat(els.maskB.value); applySettings(); });
+  els.maskColor.addEventListener('input', () => { settings.maskColor = els.maskColor.value; applySettings(); });
+  els.overlayOn.addEventListener('change', () => { settings.overlayOn = els.overlayOn.checked; applySettings(); });
+  els.fontSize.addEventListener('input', () => { settings.fontSize = parseFloat(els.fontSize.value); applySettings(); });
+
+  function setOffset(v, persist) {
+    offset = Math.round(v * 10) / 10;
+    els.offOut.textContent = (offset > 0 ? '+' : '') + offset.toFixed(1);
+    lastIdx = -2;
+    if (persist && currentId) store('ckb-offset:' + currentId, String(offset));
+    updateSubtitle(true);
+  }
+  els.offMinus.addEventListener('click', () => setOffset(offset - 0.5, true));
+  els.offPlus.addEventListener('click', () => setOffset(offset + 0.5, true));
+  els.offReset.addEventListener('click', () => setOffset(0, true));
+
+  /* ---------- Importing subtitles ---------- */
+  els.file.addEventListener('change', () => {
+    const f = els.file.files && els.file.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const list = parseSubs(reader.result);
+      if (!list.length) { say('فایلەکە ژێرنووسی دروستی تێدا نییە (SRT یان VTT پێویستە).', true); return; }
+      els.srtText.value = String(reader.result);
+      setCues(list, true);
+      say(list.length + ' ژێرنووس هێنرا.');
+    };
+    reader.onerror = () => say('خوێندنەوەی فایلەکە سەرکەوتوو نەبوو.', true);
+    reader.readAsText(f, 'UTF-8');
+    els.file.value = '';
+  });
+  els.applyText.addEventListener('click', () => {
+    const list = parseSubs(els.srtText.value);
+    if (!list.length) { say('دەقەکە ڕیزبەندی SRT یان VTT ی دروستی نییە.', true); return; }
+    setCues(list, true);
+    say(list.length + ' ژێرنووس جێبەجێ کرا.');
+  });
+  els.clearSubs.addEventListener('click', () => {
+    els.srtText.value = '';
+    setCues([], true);
+    say('ژێرنووسەکان سڕانەوە.');
+  });
+  els.demo.addEventListener('click', () => {
+    const demo = [
+      'بەخێربێن بۆ ئەم نموونەیە.',
+      'ئەم ژێرنووسە کوردییە (سۆرانی) لەسەر ماسکەکە دەردەکەوێت.',
+      'ژێرنووسی فارسی ناو ڤیدیۆکە لەژێر ماسکەکەدا دەشاردرێتەوە.',
+      'بەرزی و شوێنی ماسکەکە لە ڕێکخستنەکان دەگۆڕدرێت.',
+      'کلیک لەسەر هەر دێڕێک لە لیستەکە ڤیدیۆکە دەباتە ئەو کاتە.'
+    ];
+    const list = demo.map((text, i) => ({ start: i * 4, end: i * 4 + 3.8, text }));
+    els.srtText.value = cuesToSrt(list);
+    setCues(list, true);
+    say('ژێرنووسی نموونە هێنرا.');
+  });
+
+  /* ---------- URL form and Paste button ---------- */
+  function submitUrl() {
+    const id = extractVideoId(els.url.value);
+    if (!id) { say('لینکەکە دروست نییە. لینکی youtube.com یان youtu.be بەکاربهێنە.', true); return; }
+    say('');
+    showVideo(id);
+    try {
+      const u = new URL(location.href);
+      u.searchParams.set('v', id);
+      history.replaceState(null, '', u);
+    } catch (e) {}
+  }
+  els.form.addEventListener('submit', (e) => { e.preventDefault(); submitUrl(); });
+  els.paste.addEventListener('click', async () => {
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error('unsupported');
+      const text = await navigator.clipboard.readText();
+      if (!text) { say('کلیپبۆرد بەتاڵە.', true); return; }
+      els.url.value = text.trim();
+      submitUrl();
+    } catch (e) {
+      els.url.focus();
+      say('ناتوانرێت کلیپبۆرد بخوێنرێتەوە. لینکەکە بە دەستی لێرە بلکێنە.', true);
+    }
+  });
+
+  /* ---------- Init ---------- */
+  applySettings();
+  renderList();
+  setOffset(0, false);
+  const initial = new URLSearchParams(location.search).get('v');
+  if (initial && extractVideoId(initial)) {
+    els.url.value = 'https://youtu.be/' + initial;
+    showVideo(initial);
+  } else {
+    loadApi();
+  }
+})();
+</script>
 </body>
 </html>
