@@ -54,37 +54,22 @@
             gap: 12px;
             margin-bottom: 20px;
         }
-        .input-row {
-            display: flex;
-            gap: 8px;
-        }
+        /* دڵنیابوون لەوەی خانەی لینک LTR یە بۆ ئەوەی لینک تێک نەچێت و پەیست بکرێت */
         input[type="url"] {
-            flex: 1;
+            width: 100%;
             padding: 14px 16px;
-            background: var(--bg);
+            background: #0f172a;
             border: 1px solid var(--border);
             border-radius: 10px;
-            color: var(--text);
+            color: #fff;
             font-size: 1rem;
             box-sizing: border-box;
             outline: none;
+            direction: ltr;
+            text-align: left;
         }
         input[type="url"]:focus {
             border-color: var(--primary);
-        }
-        .paste-btn {
-            background: #334155;
-            color: white;
-            border: none;
-            padding: 0 16px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: background 0.2s;
-        }
-        .paste-btn:hover {
-            background: #475569;
         }
         button.action-btn {
             width: 100%;
@@ -157,13 +142,10 @@
 
     <div class="container">
         <h1>وەرگێڕی ژێرنووسی کوردی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆی یوتیوب دابنێ یان لەکۆپی بهێنە بۆ بینین بە کوردی</p>
+        <p class="desc">لینکی ڤیدیۆی یوتیوب دابنێ بۆ بینین بە ژێرنووسی کوردی</p>
         
         <div class="input-group">
-            <div class="input-row">
-                <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
-                <button class="paste-btn" onclick="pasteFromClipboard()">لەکۆپی هێنان</button>
-            </div>
+            <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
             <button class="action-btn" onclick="processVideo()">وەرگێڕان و پیشاندانی ژێرنووس</button>
         </div>
 
@@ -180,16 +162,6 @@
     </div>
 
     <script>
-        // فەنکشنی بەکۆپیهێنانی لینک بە یەک کلیک
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('videoUrl').value = text;
-            } catch (err) {
-                alert('تکایە بە شێوەی دەستی (Paste) لینکەکە لە خانەکەدا دابنێ.');
-            }
-        }
-
         function extractVideoId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -225,7 +197,7 @@
                         سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:١٦ - ٠٠:٢٥]</span>
+                        <span class="subtitle-time">[٠٠:٠٦ - ٠٠:٢٥]</span>
                         پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی.
                     </div>
                 `;
@@ -234,4 +206,3 @@
     </script>
 </body>
 </html>
-٠
