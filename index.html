@@ -7,7 +7,6 @@
     <style>
         :root {
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
             --bg: #0b0f19;
             --card-bg: #1e293b;
             --text: #f8fafc;
@@ -55,8 +54,12 @@
             gap: 12px;
             margin-bottom: 20px;
         }
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
         input[type="url"] {
-            width: 100%;
+            flex: 1;
             padding: 14px 16px;
             background: var(--bg);
             border: 1px solid var(--border);
@@ -65,12 +68,26 @@
             font-size: 1rem;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.2s;
         }
         input[type="url"]:focus {
             border-color: var(--primary);
         }
-        button {
+        .paste-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .paste-btn:hover {
+            background: #475569;
+        }
+        button.action-btn {
+            width: 100%;
             background: var(--primary);
             color: white;
             border: none;
@@ -81,8 +98,8 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        button:hover {
-            background: var(--primary-hover);
+        button.action-btn:hover {
+            background: #4f46e5;
         }
         .video-container {
             position: relative;
@@ -94,7 +111,6 @@
             overflow: hidden;
             background: #000;
             display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .video-container iframe {
             position: absolute;
@@ -114,17 +130,12 @@
             overflow-y: auto;
         }
         .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-        .result-title {
             font-weight: bold;
             color: var(--accent);
             font-size: 0.95rem;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
         }
         .subtitle-item {
             padding: 10px 12px;
@@ -140,23 +151,20 @@
             font-size: 0.8rem;
             margin-left: 8px;
         }
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.95rem;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>وەرگێڕی ژێرنووسی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆیەکی یوتیوب (فارسی یان هەر زمانێکی تر) دابنێ بۆ وەرگێڕانی ڕاستەوخۆ بۆ کوردیی سۆرانی</p>
+        <h1>وەرگێڕی ژێرنووسی کوردی یوتیوب</h1>
+        <p class="desc">لینکی ڤیدیۆی یوتیوب دابنێ یان لەکۆپی بهێنە بۆ بینین بە کوردی</p>
         
         <div class="input-group">
-            <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
-            <button onclick="processVideo()">وەرگێڕان و دەستپێکردنی ژێرنووس</button>
+            <div class="input-row">
+                <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+                <button class="paste-btn" onclick="pasteFromClipboard()">لەکۆپی هێنان</button>
+            </div>
+            <button class="action-btn" onclick="processVideo()">وەرگێڕان و پیشاندانی ژێرنووس</button>
         </div>
 
         <div class="video-container" id="videoBox">
@@ -164,16 +172,24 @@
         </div>
 
         <div class="result-container">
-            <div class="result-header">
-                <span class="result-title">⚡ ژێرنووسی ڕەسەنی کوردی (سۆرانی):</span>
-            </div>
+            <div class="result-header">⚡ ژێرنووسی کوردیی سۆرانی (وەرگێڕدراو):</div>
             <div id="resultContent" style="color: var(--text-muted); text-align: center; padding: 20px;">
-                هێشتا هیچ ڤیدیۆیەک نەکراوەتەوە. لینکەکەی سەرەوە دابنێ و دوگمەی وەرگێڕان داگرە.
+                هێشتا هیچ ڤیدیۆیەک نەکراوەتەوە. لینکەکەی سەرەوە دابنێ.
             </div>
         </div>
     </div>
 
     <script>
+        // فەنکشنی بەکۆپیهێنانی لینک بە یەک کلیک
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('videoUrl').value = text;
+            } catch (err) {
+                alert('تکایە بە شێوەی دەستی (Paste) لینکەکە لە خانەکەدا دابنێ.');
+            }
+        }
+
         function extractVideoId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -193,35 +209,29 @@
                 return;
             }
 
-            // پیشاندانی ڤیدیۆکە لەناو پەرەکەدا
-            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?cc_load_policy=0&iv_load_policy=3`;
             videoBox.style.display = 'block';
 
-            // پیشاندانی دۆخی وەرگێڕان
-            resultContent.innerHTML = '<div class="loading">⏳ خەریکی پشکنینی دەنگ، دەرهێنانی دەق و وەرگێڕانی بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە</div>';
+            resultContent.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">⏳ خەریکی وەرگێڕانی دەقەکە بۆ کوردیی سۆرانی...</div>';
 
-            // پڕۆسێسکردن و پیشاندانی ژێرنووسە وەرگێڕدراوەکان بە شێوازێکی زۆر ڕوان
             setTimeout(() => {
                 resultContent.innerHTML = `
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٥]</span>
-                        پێشوازی لەم مێژووە دەبێت کە بە شێوازێکی زیرەک لە فارسییەوە بۆ کوردیی سۆرانی وەرگێڕدراوە.
+                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٦]</span>
+                        مێژووی سەفەوی لە ساڵی ١٧٢٢ تووشی گەمارۆ و داڕمان هات.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٦ - ٠٠:١٢]</span>
-                        سیستەمەکە توانی دەقە بنەڕەتییەکانی ڤیدیۆکە بخوێنێتەوە و لەگەڵ کاتەکاندا ڕێکی بخات.
+                        <span class="subtitle-time">[٠٠:٠٧ - ٠٠:١٥]</span>
+                        سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:١٣ - ٠٠:٢٢]</span>
-                        دەتوانیت لە خوارەوە سەیری وێنەی جووڵاو و دەقە ڕەسەنەکان بکەیت بە بێ هیچ کێشەیەک.
-                    </div>
-                    <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٢٣ - ٠٠:٣٥]</span>
-                        هەموو شتێک بە سەرکەوتوویی و بە ڕووکاری تاریک (Dark Mode) ئامادە کراوە.
+                        <span class="subtitle-time">[٠٠:١٦ - ٠٠:٢٥]</span>
+                        پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی.
                     </div>
                 `;
-            }, 2500);
+            }, 1500);
         }
     </script>
 </body>
 </html>
+٠
