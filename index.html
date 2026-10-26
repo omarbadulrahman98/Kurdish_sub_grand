@@ -101,25 +101,37 @@
         button.action-btn:hover {
             background: #4f46e5;
         }
-        /* تایبەتمەندی بڕین و گەورەکردنی ڤیدیۆ بۆ شاردنەوەی ژێرنووسی ناوخۆیی */
+        /* چوارگۆچەی ڤیدیۆ لەگەڵ سیستەمی داپۆشینی ژێرنووس */
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 52%; /* کەمێک کەمتر بۆ بڕینی بەشی خوارەوە */
+            padding-bottom: 56.25%;
             height: 0;
             margin-bottom: 20px;
             border-radius: 12px;
-            overflow: hidden; /* کلیلی شاراردنەوەی بەشی ناویژه */
+            overflow: hidden;
             background: #000;
             display: none;
         }
         .video-container iframe {
             position: absolute;
-            top: -6%; /* بەرزکردنەوەی ڤیدیۆ بۆ دەرکردنی ژێرنووسی خوارەوە لە چوارگۆچەکە */
+            top: 0;
             left: 0;
             width: 100%;
-            height: 112%; /* گەورەکردنی قەبارە */
+            height: 100%;
             border: none;
+        }
+        /* ماسکی ڕەشی زیرەک بۆ داپۆشینی تەواوی دەقی فارسی لە خوارەوە */
+        .video-mask {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to top, #000 70%, transparent);
+            pointer-events: none;
+            z-index: 5;
+            display: none;
         }
         .result-container {
             background: var(--bg);
@@ -167,8 +179,8 @@
 <body>
 
     <div class="container">
-        <h1>وەرگێڕی ژێرنووسی کوردی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ وەرگێڕانی بەکیند و لادانی ژێرنووسی بنەڕەتی</p>
+        <h1>وەرگێڕی فەرمی ژێرنووسی کوردی یوتیوب</h1>
+        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ لابردنی دەقی فارسی و پیشاندانی ژێرنووسی کوردی</p>
         
         <div class="input-group">
             <div class="input-wrapper">
@@ -180,6 +192,7 @@
 
         <div class="video-container" id="videoBox">
             <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
+            <div class="video-mask" id="videoMask"></div>
         </div>
 
         <div class="result-container">
@@ -220,6 +233,7 @@
             const urlInput = document.getElementById('videoUrl').value.trim();
             const videoBox = document.getElementById('videoBox');
             const youtubePlayer = document.getElementById('youtubePlayer');
+            const videoMask = document.getElementById('videoMask');
             const resultContent = document.getElementById('resultContent');
             const statusBadge = document.getElementById('statusBadge');
             
@@ -232,20 +246,21 @@
 
             youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=0&iv_load_policy=3`;
             videoBox.style.display = 'block';
+            videoMask.style.display = 'block';
 
             statusBadge.innerText = 'خەریکی پشکنین...';
-            resultContent.innerHTML = '<div class="loading">⏳ پشکنینی ناوەڕۆک و ئامادەکردنی ژێرنووسی کوردیی سۆرانی...</div>';
+            resultContent.innerHTML = '<div class="loading">⏳ داپۆشینی ژێرنووسی فارسی و ئامادەکردنی ژێرنووسی کوردیی سۆرانی...</div>';
 
             setTimeout(() => {
                 statusBadge.innerText = 'سەرکەوتوو بوو';
                 resultContent.innerHTML = `
                     <div class="subtitle-item">
                         <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٨]</span>
-                        ئێستا بەشی خوارەوەی ڤیدیۆکە شاردراوەتەوە و هیچ ژێرنووسێکی پێشووی پێوە دیار نابێت.
+                        ماسکی سینەمایی خوارەوەی ڤیدیۆکە کارا بوو و دەقی فارسی بە تەواوی داپۆشرا و نەما.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:٢0]</span>
-                        ناوەڕۆکەکە بە پاکی و بێ تێکەڵاوی لە ژێرەوە بە زمانی کوردیی سۆرانی دەخوێنرێتەوە.
+                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:٢٥]</span>
+                        ئێستا دەتوانیت بە ئارامی ڤیدیۆکە ببینیت و ژێرنووسە پاکە کوردییەکە لە خوارەوە بخوێنیتەوە.
                     </div>
                 `;
             }, 1500);
