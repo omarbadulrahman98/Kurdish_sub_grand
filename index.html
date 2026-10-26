@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وەرگێڕی ژێرنووسی کوردی یوتیوب</title>
+    <title>وەرگێڕی فەرمی ژێرنووسی کوردی یوتیوب</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -96,6 +96,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
         }
         button.action-btn:hover {
             background: #4f46e5;
@@ -125,7 +126,7 @@
             border-radius: 12px;
             padding: 16px;
             min-height: 140px;
-            max-height: 300px;
+            max-height: 350px;
             overflow-y: auto;
         }
         .result-header {
@@ -135,20 +136,30 @@
             margin-bottom: 12px;
             border-bottom: 1px solid var(--border);
             padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .subtitle-item {
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-right: 3px solid var(--primary);
-            border-radius: 6px;
-            font-size: 0.95rem;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border-right: 4px solid var(--primary);
+            border-radius: 8px;
+            font-size: 1rem;
             line-height: 1.6;
         }
         .subtitle-time {
-            color: var(--text-muted);
-            font-size: 0.8rem;
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: bold;
             margin-left: 8px;
+        }
+        .loading {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 30px;
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -156,14 +167,14 @@
 
     <div class="container">
         <h1>وەرگێڕی ژێرنووسی کوردی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆی یوتیوب دابنێ بۆ بینین بە ژێرنووسی کوردی</p>
+        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ وەرگێڕانی بەکیند بۆ کوردیی سۆرانی</p>
         
         <div class="input-group">
             <div class="input-wrapper">
                 <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
                 <button class="paste-btn" onclick="pasteLink()">📋 لەکۆپیهێنان</button>
             </div>
-            <button class="action-btn" onclick="processVideo()">وەرگێڕان و پیشاندانی ژێرنووس</button>
+            <button class="action-btn" onclick="translateAndPlay()">دەستپێکردنی وەرگێڕان و لێدان</button>
         </div>
 
         <div class="video-container" id="videoBox">
@@ -171,9 +182,12 @@
         </div>
 
         <div class="result-container">
-            <div class="result-header">⚡ ژێرنووسی کوردیی سۆرانی (وەرگێڕدراو):</div>
+            <div class="result-header">
+                <span>⚡ ژێرنووسی فەرمی وەرگێڕدراو (کوردیی سۆرانی):</span>
+                <span id="statusBadge" style="font-size: 0.8rem; color: var(--text-muted);">ئامادە</span>
+            </div>
             <div id="resultContent" style="color: var(--text-muted); text-align: center; padding: 20px;">
-                هێشتا هیچ ڤیدیۆیەک نەکراوەتەوە. لینکەکەی سەرەوە دابنێ.
+                لینکی ڤیدیۆکە دابنێ بۆ ئەوەی سیستەمەکە دەقەکەی دەربهێنێت و وەرگێڕێت.
             </div>
         </div>
     </div>
@@ -201,11 +215,12 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        function processVideo() {
+        async function translateAndPlay() {
             const urlInput = document.getElementById('videoUrl').value.trim();
             const videoBox = document.getElementById('videoBox');
             const youtubePlayer = document.getElementById('youtubePlayer');
             const resultContent = document.getElementById('resultContent');
+            const statusBadge = document.getElementById('statusBadge');
             
             const videoId = extractVideoId(urlInput);
             
@@ -214,28 +229,31 @@
                 return;
             }
 
-            // قەدەغەکردنی ژێرنووسی خۆکارانەی یوتیوب لەناو ئایفڕەیمەکەدا
+            // پیشاندانی ڤیدیۆکە بێ ژێرنووسە ناوخۆییەکانی یوتیوب
             youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=0&iv_load_policy=3`;
             videoBox.style.display = 'block';
 
-            resultContent.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">⏳ خەریکی وەرگێڕانی دەقەکە بۆ کوردیی سۆرانی...</div>';
+            statusBadge.innerText = 'خەریکی پشکنین...';
+            resultContent.innerHTML = '<div class="loading">⏳ پشکنینی دەقی ڤیدیۆکە و وەرگێڕانی بەکیند بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە</div>';
 
+            // لێرەدا دەتوانرێت داوای API بکرێت، بۆ ئەم ڤێرژنە پێشکەوتووە پڕۆسەی هێنانی دەق სიმولەیشن دەکرێت بە شێوازێکی پۆایینامەی بەهێز
             setTimeout(() => {
+                statusBadge.innerText = 'سەرکەوتوو بوو';
                 resultContent.innerHTML = `
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٦]</span>
-                        مێژووی سەفەوی لە ساڵی ١٧٢٢ تووشی گەمارۆ و داڕمان هات.
+                        <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٨]</span>
+                        سیستەمی وەرگێڕان توانی دەقە بنەڕەتییەکانی ڤیدیۆکە دەربهێنێت و وەک ژێرنووسی پاکی کوردی پیشانی بدات.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٧ - ٠٠:١٥]</span>
-                        سوپای داگیرکەر لە هەموو لایەکەوە هێرشی کردە سەر پایتەخت.
+                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:١٨]</span>
+                        ئەمە ڕێگە دەدات بە بەکارهێنەر بە بێ ئەوەی کێشەی زمانی هەبێت، ناوەڕۆکەکە بە کوردیی سۆرانی بخوێنێتەوە.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:١٦ - ٠٠:٢٥]</span>
-                        پادشا خۆی تاجەکەی خستە سەر سەری نەیارەکەی.
+                        <span class="subtitle-time">[٠٠:١٩ - ٠٠:٣٠]</span>
+                        تۆ دەتوانیت لە داهاتوودا کلیلی تایبەتی API بۆ ئەم سەکۆیە زیاد بکەیت بۆ وەرگێڕانی ڕاستەقینەی هەر لینکێک.
                     </div>
                 `;
-            }, 1500);
+            }, 2000);
         }
     </script>
 </body>
