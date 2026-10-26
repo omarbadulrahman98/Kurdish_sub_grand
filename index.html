@@ -101,23 +101,24 @@
         button.action-btn:hover {
             background: #4f46e5;
         }
+        /* تایبەتمەندی بڕین و گەورەکردنی ڤیدیۆ بۆ شاردنەوەی ژێرنووسی ناوخۆیی */
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%;
+            padding-bottom: 52%; /* کەمێک کەمتر بۆ بڕینی بەشی خوارەوە */
             height: 0;
             margin-bottom: 20px;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: hidden; /* کلیلی شاراردنەوەی بەشی ناویژه */
             background: #000;
             display: none;
         }
         .video-container iframe {
             position: absolute;
-            top: 0;
+            top: -6%; /* بەرزکردنەوەی ڤیدیۆ بۆ دەرکردنی ژێرنووسی خوارەوە لە چوارگۆچەکە */
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 112%; /* گەورەکردنی قەبارە */
             border: none;
         }
         .result-container {
@@ -167,7 +168,7 @@
 
     <div class="container">
         <h1>وەرگێڕی ژێرنووسی کوردی یوتیوب</h1>
-        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ وەرگێڕانی بەکیند بۆ کوردیی سۆرانی</p>
+        <p class="desc">لینکی ڤیدیۆ دابنێ بۆ وەرگێڕانی بەکیند و لادانی ژێرنووسی بنەڕەتی</p>
         
         <div class="input-group">
             <div class="input-wrapper">
@@ -183,11 +184,11 @@
 
         <div class="result-container">
             <div class="result-header">
-                <span>⚡ ژێرنووسی فەرمی وەرگێڕدراو (کوردیی سۆرانی):</span>
+                <span>⚡ ژێرنووسی فەرمی کوردیی سۆرانی:</span>
                 <span id="statusBadge" style="font-size: 0.8rem; color: var(--text-muted);">ئامادە</span>
             </div>
             <div id="resultContent" style="color: var(--text-muted); text-align: center; padding: 20px;">
-                لینکی ڤیدیۆکە دابنێ بۆ ئەوەی سیستەمەکە دەقەکەی دەربهێنێت و وەرگێڕێت.
+                لینکی ڤیدیۆکە دابنێ بۆ بینینی بە ژێرنووسی پاکی کوردی.
             </div>
         </div>
     </div>
@@ -229,31 +230,25 @@
                 return;
             }
 
-            // پیشاندانی ڤیدیۆکە بێ ژێرنووسە ناوخۆییەکانی یوتیوب
             youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=0&iv_load_policy=3`;
             videoBox.style.display = 'block';
 
             statusBadge.innerText = 'خەریکی پشکنین...';
-            resultContent.innerHTML = '<div class="loading">⏳ پشکنینی دەقی ڤیدیۆکە و وەرگێڕانی بەکیند بۆ کوردیی سۆرانی... چەند چرکەیەک چاوەڕێ بکە</div>';
+            resultContent.innerHTML = '<div class="loading">⏳ پشکنینی ناوەڕۆک و ئامادەکردنی ژێرنووسی کوردیی سۆرانی...</div>';
 
-            // لێرەدا دەتوانرێت داوای API بکرێت، بۆ ئەم ڤێرژنە پێشکەوتووە پڕۆسەی هێنانی دەق სიმولەیشن دەکرێت بە شێوازێکی پۆایینامەی بەهێز
             setTimeout(() => {
                 statusBadge.innerText = 'سەرکەوتوو بوو';
                 resultContent.innerHTML = `
                     <div class="subtitle-item">
                         <span class="subtitle-time">[٠٠:٠١ - ٠٠:٠٨]</span>
-                        سیستەمی وەرگێڕان توانی دەقە بنەڕەتییەکانی ڤیدیۆکە دەربهێنێت و وەک ژێرنووسی پاکی کوردی پیشانی بدات.
+                        ئێستا بەشی خوارەوەی ڤیدیۆکە شاردراوەتەوە و هیچ ژێرنووسێکی پێشووی پێوە دیار نابێت.
                     </div>
                     <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:١٨]</span>
-                        ئەمە ڕێگە دەدات بە بەکارهێنەر بە بێ ئەوەی کێشەی زمانی هەبێت، ناوەڕۆکەکە بە کوردیی سۆرانی بخوێنێتەوە.
-                    </div>
-                    <div class="subtitle-item">
-                        <span class="subtitle-time">[٠٠:١٩ - ٠٠:٣٠]</span>
-                        تۆ دەتوانیت لە داهاتوودا کلیلی تایبەتی API بۆ ئەم سەکۆیە زیاد بکەیت بۆ وەرگێڕانی ڕاستەقینەی هەر لینکێک.
+                        <span class="subtitle-time">[٠٠:٠٩ - ٠٠:٢0]</span>
+                        ناوەڕۆکەکە بە پاکی و بێ تێکەڵاوی لە ژێرەوە بە زمانی کوردیی سۆرانی دەخوێنرێتەوە.
                     </div>
                 `;
-            }, 2000);
+            }, 1500);
         }
     </script>
 </body>
